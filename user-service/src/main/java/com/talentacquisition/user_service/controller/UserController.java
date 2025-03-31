@@ -1,15 +1,16 @@
 package com.talentacquisition.user_service.controller;
 
-
-import com.talentacquisition.user_service.dto.UserWithJobDetailsResponseDto;
+import com.talentacquisition.user_service.dto.UserDTO;
 import com.talentacquisition.user_service.entity.UserEntity;
 import com.talentacquisition.user_service.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user-service")
@@ -17,37 +18,17 @@ import java.util.List;
 public class UserController {
 
 	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-
-	@PostMapping
-	public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity userEntity) {
-		UserEntity savedUser = userService.saveUser(userEntity);
-		return ResponseEntity.ok(savedUser);
-	}
-
-	@GetMapping("/{userId}")
-	public ResponseEntity<UserEntity> getUserById(@PathVariable Long userId) {
-		UserEntity existUser = userService.getUserById(userId);
-		if (existUser != null) {
-			return ResponseEntity.ok(existUser);
-		} else {
-			return ResponseEntity.notFound().build();
+	@PostMapping("/resume-analysis")
+	public ResponseEntity<UserDTO> saveUserAndAnalyzeResume(
+			@RequestPart("userData") String userData,
+			@RequestPart("resumePdf")MultipartFile resumePdf) throws IOException {
+		try {
+			UserDTO savedUserDTO = userService.saveUserAndResumeAnalysis(userData, resumePdf);
+			return ResponseEntity.status(HttpStatus.CREATED).body(savedUserDTO);
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-
-	@GetMapping
-	public ResponseEntity<List<UserEntity>> getAllUsers() {
-		List<UserEntity> users = userService.getAllUsers();
-		return ResponseEntity.ok(users);
-	}
-
-	@GetMapping("/userDetails")
-	public ResponseEntity<UserWithJobDetailsResponseDto> getUserWithJobDetails(@RequestParam("userEmail") String userEmail) {
-
-		UserWithJobDetailsResponseDto userWithJobDetailsResponseDto = userService.findUserWithJobDetails(userEmail);
-		return ResponseEntity.ok(userWithJobDetailsResponseDto);
-	}
-
-
 }

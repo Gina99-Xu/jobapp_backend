@@ -14,16 +14,17 @@ import java.time.LocalDate;
 @Entity
 public class TalentRequest {
 
-    @Id
-    private String talentRequestId;
-    private String talentRequestTitle;
+	@Id
+	private String talentRequestId;
+	private String talentRequestTitle;
 
-    @Embedded
-    private JobDescription jobDescription;
-    @Embedded
-    private CandidateSkills candidateSkills;
+	@Embedded
+	private JobDescription jobDescription;
 
-    @Enumerated(EnumType.STRING)
-    private RequestStatus requestStatus;
-    private LocalDate startDate;
+	@Embedded
+	private CandidateSkills candidateSkills;
+
+	@Enumerated(EnumType.STRING)
+	private RequestStatus requestStatus;
+	private LocalDate startDate;
 }

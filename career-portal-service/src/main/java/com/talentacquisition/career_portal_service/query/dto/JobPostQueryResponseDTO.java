@@ -15,5 +15,4 @@ public class JobPostQueryResponseDTO {
 	private CandidateSkills candidateSkills;
 	private RoleLevel roleLevel;
 	private EmploymentType employmentType;
-
 }
