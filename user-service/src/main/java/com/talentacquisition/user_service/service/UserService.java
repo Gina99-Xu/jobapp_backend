@@ -105,10 +105,6 @@ public class UserService {
 		String cleanJson = extractStrictJson(jsonResult);
 		validatAnalysisReponse(cleanJson);
 
-		System.out.print("jsonresult" + jsonResult);
-		System.out.print("cleanJson" + cleanJson);
-
-
 		//4. Create and populate entity
 		UserResumeAnalysisEntity userResumeAnalysisEntity = new ObjectMapper()
 				.readValue(cleanJson, UserResumeAnalysisEntity.class);
@@ -184,7 +180,9 @@ public class UserService {
 					.replace("\"", "\\\"")  // Escape quotes
 					.replace("\n", " ");     // Remove newlines
 
-			String prompt = "Analyze this resume against the following job post and provide EXACTLY this JSON format:\n\n" +
+			String prompt =
+					"You are a JSON output generator. " +
+							"Analyze this resume against the job post and provide ONLY the following JSON structure with no additional text or explanation:\n\n" +
 					"{\n" +
 					"  \"experienceScore\": [0-100],\n" +
 					"  \"skillsScore\": [0-100],\n" +
@@ -192,17 +190,13 @@ public class UserService {
 					"  \"overallScore\": [0-100],\n" +
 					"  \"overallAnalysis\": \"Concise professional summary\"\n" +
 					"}\n\n" +
-					"### Complete Job Post Details ###\n" +
-					jobPostJson + "\n\n" +
-					"### Resume Content ###\n" +
-					pdfContent + "\n\n" +
-					"Analysis Guidelines:\n" +
-					"1. Compare resume with job requirements\n" +
-					"2. Return ONLY valid JSON";
+					"Important: Your response must begin with { and end with }. Do not include any text outside these brackets.\n\n" +
+					"### Job Post ###\n" + jobPostJson + "\n\n" +
+					"### Resume ###\n" + pdfContent;
 
 			return webClient.post()
 					.uri("/api/generate")
-					.bodyValue(new OllamaRequest("llama2:7b", prompt))
+					.bodyValue(new OllamaRequest("neural-chat:latest", prompt))
 					.retrieve()
 					.bodyToFlux(String.class)
 					.reduce(new StringBuilder(), (sb, chunk) -> {
