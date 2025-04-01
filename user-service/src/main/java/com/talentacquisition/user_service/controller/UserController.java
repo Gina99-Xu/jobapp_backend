@@ -20,7 +20,7 @@ public class UserController {
 	@Autowired
 	private final UserService userService;
 
-	@PostMapping("/resume-analysis")
+	@PostMapping("/save-user-and-analyze-resume")
 	public ResponseEntity<UserDTO> saveUserAndAnalyzeResume(
 			@RequestPart("userData") String userData,
 			@RequestPart("resumePdf")MultipartFile resumePdf) throws IOException {
