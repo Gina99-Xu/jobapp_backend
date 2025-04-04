@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Embeddable
 public class JobDescription {
-
     private String responsibilities;
     private String qualifications;
 }

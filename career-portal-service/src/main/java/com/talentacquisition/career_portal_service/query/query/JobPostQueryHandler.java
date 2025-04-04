@@ -99,5 +99,17 @@ public class JobPostQueryHandler {
         return jobPostQueryResponseDTOList;
     }
 
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostContainingKeyword(FindAllJobContainingKeyword findAllJobContainingKeyword) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.searchByKeyword(findAllJobContainingKeyword.getKeyword());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
 
 }

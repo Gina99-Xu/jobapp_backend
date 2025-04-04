@@ -72,4 +72,11 @@ public class JobPostQueryService {
         return new ResponseEntity(jobPostQueryResponseDTOList, HttpStatus.OK);
     }
 
+    public ResponseEntity findJobContainKeyWords(String keyword) {
+        FindAllJobContainingKeyword findAllJobContainingKeyword = new FindAllJobContainingKeyword(keyword);
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = queryGateway
+                .query(findAllJobContainingKeyword, ResponseTypes.multipleInstancesOf(JobPostQueryResponseDTO.class)).join();
+        return new ResponseEntity(jobPostQueryResponseDTOList, HttpStatus.OK);
+    }
+
 }

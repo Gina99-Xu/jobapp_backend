@@ -33,7 +33,9 @@ public class JobPostQueryController {
 			@RequestParam(required = false) EmploymentType employmentType,
 			@RequestParam(required = false) CoreSkill coreSkill,
 			@RequestParam(required = false) RoleLevel roleLevel,
-			@RequestParam(required = false) SkillLevel skillLevel) throws Exception {
+			@RequestParam(required = false) SkillLevel skillLevel,
+			@RequestParam(required = false) String keyword
+			) throws Exception {
 
 		if (coreSkill != null && skillLevel != null) {
 			return jobPostQueryService.findJobPostByCoreSkillAndSkillLevelType(coreSkill, skillLevel);
@@ -51,6 +53,10 @@ public class JobPostQueryController {
 		}
 		if (skillLevel != null) {
 			return jobPostQueryService.findJobPostBySkillLevelType(skillLevel);
+		}
+
+		if (keyword != null) {
+			return jobPostQueryService.findJobContainKeyWords(keyword);
 		}
 		return jobPostQueryService.findAllJobPosts();
 	}
