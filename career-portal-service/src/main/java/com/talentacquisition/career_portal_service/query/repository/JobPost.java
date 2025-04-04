@@ -30,5 +30,4 @@ public class JobPost {
     @Enumerated(EnumType.STRING)
     private EmploymentType employmentType;
 
-
 }

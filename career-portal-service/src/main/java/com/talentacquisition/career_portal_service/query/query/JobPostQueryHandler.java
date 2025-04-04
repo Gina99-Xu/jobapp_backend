@@ -39,5 +39,65 @@ public class JobPostQueryHandler {
         return jobPostQueryResponseDTO;
     }
 
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostByEmploymentType(FindJobPostByEmploymentTypeQuery findJobPostByEmploymentTypeQuery) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.findByEmploymentType(findJobPostByEmploymentTypeQuery.getEmploymentType());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostByCoreSkillType(FindJobPostByCoreSkillTypeQuery findJobPostByCoreSkillTypeQuery) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.findByCandidateSkillsCoreSkill(findJobPostByCoreSkillTypeQuery.getCoreSkill());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostBySkillLevelType(FindJobPostBySkillLevelTypeQuery findJobPostBySkillLevelTypeQuery) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.findByCandidateSkillsSkillLevel(findJobPostBySkillLevelTypeQuery.getSkillLevel());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostByCoreSkillAndSkillLevelType(FindJobPostByCoreSkillAndSkillLevelTypeQuery findJobPostByCoreSkillAndSkillLevelTypeQuery) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.findByCandidateSkillsCoreSkillAndCandidateSkillsSkillLevel(findJobPostByCoreSkillAndSkillLevelTypeQuery.getCoreSkill(), findJobPostByCoreSkillAndSkillLevelTypeQuery.getSkillLevel());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
+    @QueryHandler
+    public List<JobPostQueryResponseDTO> findJobPostByRoleLevelType(FindJobPostByRoleLevelTypeQuery findJobPostByRoleLevelTypeQuery) {
+        List<JobPostQueryResponseDTO> jobPostQueryResponseDTOList = new ArrayList<>();
+        List<JobPost> jobPostList = jobPostRepository.findByRoleLevel(findJobPostByRoleLevelTypeQuery.getRoleLevel());
+        for (JobPost jobPost : jobPostList) {
+            JobPostQueryResponseDTO jobPostQueryResponseDTO = new JobPostQueryResponseDTO();
+            BeanUtils.copyProperties(jobPost, jobPostQueryResponseDTO);
+            jobPostQueryResponseDTOList.add(jobPostQueryResponseDTO);
+        }
+        return jobPostQueryResponseDTOList;
+    }
+
 
 }

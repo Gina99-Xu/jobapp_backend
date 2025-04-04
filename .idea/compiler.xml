@@ -12,7 +12,6 @@
         </processorPath>
         <module name="talent-fulfillment-service" />
         <module name="talent-request-service" />
-        <module name="career-portal-service" />
         <module name="user-service" />
       </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -22,6 +21,15 @@
         <module name="talent-gateway-service" />
         <module name="talent-core-api" />
         <module name="talent-discovery-server-service" />
+      </profile>
+      <profile name="Annotation profile for career-portal-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="career-portal-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
