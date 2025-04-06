@@ -47,18 +47,28 @@ public class UserService {
 			.baseUrl("http://localhost:11434")
 			.build();
 
+	public UserDTO findUserResumeByEmail(String userEmail) {
+		UserEntity userEntity = userRepository.findUserByUserEmail(userEmail);
+		return convertToDTO(userEntity);
+	}
+
 	public UserDTO saveUserAndResumeAnalysis(String userDataJson, MultipartFile resumeFile) throws IOException {
 
 		UserResumeRequestDTO userResumeRequestData = new ObjectMapper().readValue(userDataJson, UserResumeRequestDTO.class);
+		UserEntity userEntity;
+		String userEmail = userResumeRequestData.getUserEmail();
 
-		UserEntity userEntity= new UserEntity();
-		userEntity.setUserEmail(userResumeRequestData.getUserEmail());
-		userEntity.setFirstName(userResumeRequestData.getFirstName());
-		userEntity.setLastName(userResumeRequestData.getLastName());
-		userEntity.setMobileNumber(userResumeRequestData.getMobileNumber());
+		if(userRepository.findUserByUserEmail(userEmail) != null) {
+			userEntity = userRepository.findUserByUserEmail(userEmail);
+		}else{
+			userEntity= new UserEntity();
+			userEntity.setUserEmail(userResumeRequestData.getUserEmail());
+			userEntity.setFirstName(userResumeRequestData.getFirstName());
+			userEntity.setLastName(userResumeRequestData.getLastName());
+			userEntity.setMobileNumber(userResumeRequestData.getMobileNumber());
+
+		}
 		userEntity = userRepository.save(userEntity);
-
-
 		String jobPostId = userResumeRequestData.getJobPostId();
 		UserResumeAnalysisEntity savedUserResumeAnalysisEntity = saveUserResumeAnalysisEntity(userEntity, resumeFile, jobPostId);
 
@@ -70,7 +80,6 @@ public class UserService {
 		userEntity = userRepository.save(userEntity);
 
 		return convertToDTO(userEntity);
-
 	}
 
 	private UserDTO convertToDTO(UserEntity userEntity) {
@@ -90,7 +99,6 @@ public class UserService {
 	private UserResumeAnalysisDTO convertToResumeAnalysisDTO(UserResumeAnalysisEntity userResumeAnalysisEntity) {
 		return modelMapper.map(userResumeAnalysisEntity, UserResumeAnalysisDTO.class);
 	}
-
 
 	private UserResumeAnalysisEntity saveUserResumeAnalysisEntity (UserEntity userEntity, MultipartFile resumeFile, String jobPostId) throws IOException {
 		//1. Extract text for analysis
@@ -117,7 +125,6 @@ public class UserService {
 		return userResumeAnalysisEntityRepository.save(userResumeAnalysisEntity);
 	}
 
-
 	private String extractStrictJson(String llmResponse) throws JsonProcessingException {
 		// Find the first { and last } to extract pure JSON
 		int start = llmResponse.indexOf('{');
@@ -143,9 +150,6 @@ public class UserService {
 		return mapper.writeValueAsString(filteredJson);
 	}
 
-
-
-
 	private void validatAnalysisReponse(String JsonResponse) {
 		try{
 			JsonNode node = new ObjectMapper().readTree(JsonResponse);
@@ -163,14 +167,12 @@ public class UserService {
 		}
 	}
 
-
 	private String extractTextFromPdf(MultipartFile file) throws IOException {
 		try (PDDocument document = PDDocument.load(file.getInputStream())) {
 			PDFTextStripper pdfStripper = new PDFTextStripper();
 			return pdfStripper.getText(document);
 		}
 	}
-
 
 	private String analyzeResumeContent(String pdfContent, JobPostQueryResponseDTO jobPost) {
 

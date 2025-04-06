@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user-resume-analysis")
 public class UserResumeAnalysisController {
 
-
 	@Autowired
 	private UserResumeAnalysisService userResumeAnalysisService;
 
